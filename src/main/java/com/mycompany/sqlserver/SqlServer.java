@@ -11,6 +11,6 @@ package com.mycompany.sqlserver;
 public class SqlServer {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+       
     }
 }
