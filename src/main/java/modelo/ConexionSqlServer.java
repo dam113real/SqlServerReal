@@ -4,8 +4,6 @@
  */
 package modelo;
 
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,32 +11,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 /**
  *
  * @author Diurno
  */
 public class ConexionSqlServer {
-    // Connect to your database.
-    // Replace server name, username, and password with your credentials
 
     public static void main(String[] args) {
-        String connectionUrl =
-                "jdbc:sqlserver://yourserver.database.windows.net:1433;"
-                        + "database=AdventureWorks;"
-                        + "user=yourusername@yourserver;"
-                        + "password=<password>;"
-                        + "encrypt=true;"
-                        + "trustServerCertificate=false;"
-                        + "loginTimeout=30;";
+        
+        
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=NombreBaseDeDatos";
+    private static final String USER = "tu_usuario";  // Usuario de la base de datos
+    private static final String PASSWORD = "tu_contraseña";  // Contraseña del usuario
 
-        try (Connection connection = DriverManager.getConnection(connectionUrl);) {
-            // Code here.
-        }
-        // Handle any errors that may have occurred.
-        catch (SQLException e) {
-            e.printStackTrace();
+    // Método para obtener la conexión
+    public static Connection getConnection() throws SQLException {
+        try {
+            // Cargar el driver de SQL Server (no es necesario en las versiones más recientes de JDBC)
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+            // Retornar la conexión
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("No se pudo encontrar el driver de SQL Server", e);
         }
     }
 }
-

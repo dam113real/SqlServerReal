@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,7 +17,22 @@ import java.sql.SQLException;
  */
 public class TiendasRepositorio {
     
-    public void mostrarTienda(Connection conn, String nif) throws SQLException{
+    private Connection conexion;
+    
+    public Connection conectar(){
+        try {
+            conexion = ConexionSqlServer.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ArticulosRepositorio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return conexion;
+    }
+    
+    public void mostrarTienda(String nif) throws SQLException{
+        
+        Connection conn = conectar();
+        
         String query = "SELECT * FROM VENTAS WHERE NIF = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -38,8 +55,9 @@ public class TiendasRepositorio {
         }
     }
         
-    public void insertarTienda(Connection conn, String nif, String nombre, String direccion, String poblacion, 
+    public void insertarTienda(String nif, String nombre, String direccion, String poblacion, 
                                String provincia, int codPostal) throws SQLException {
+        Connection conn = conectar();
         String query = "INSERT INTO TIENDAS (NIF, NOMBRE, DIRECCION, POBLACION, PROVINCIA, CODPOSTAL) "
                      + "VALUES (?, ?, ?, ?, ?, ?)";
         
@@ -55,8 +73,9 @@ public class TiendasRepositorio {
     }
 
 
-    public void actualizarTienda(Connection conn, String nif, String nombre, String direccion, String poblacion, 
+    public void actualizarTienda(String nif, String nombre, String direccion, String poblacion, 
                                  String provincia, int codPostal) throws SQLException {
+        Connection conn = conectar();
         String query = "UPDATE TIENDAS SET NOMBRE = ?, DIRECCION = ?, POBLACION = ?, PROVINCIA = ?, CODPOSTAL = ? "
                      + "WHERE NIF = ?";
         
@@ -72,7 +91,8 @@ public class TiendasRepositorio {
     }
 
 
-    public void eliminarTienda(Connection conn, String nif) throws SQLException {
+    public void eliminarTienda(String nif) throws SQLException {
+        Connection conn = conectar();
         String query = "DELETE FROM TIENDAS WHERE NIF = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
