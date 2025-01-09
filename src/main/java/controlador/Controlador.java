@@ -13,6 +13,7 @@ import modelo.Ejemplar_Articulo;
 import modelo.Ejemplar_ArticuloRepositorio;
 import modelo.TiendasRepositorio;
 import modelo.VentasRepositorio;
+import vista.VentanaPrincipal;
 import vista.Vista;
 
 /**
@@ -27,14 +28,15 @@ public class Controlador {
     VentasRepositorio vr;
     Ejemplar_ArticuloRepositorio ear;
     Vista v;
+    private VentanaPrincipal ventanaPrincipal;
 
-    public Controlador(ArticulosRepositorio ar, TiendasRepositorio tr, VentasRepositorio vr, Ejemplar_ArticuloRepositorio ear, Vista v) throws SQLException {
+    public Controlador(ArticulosRepositorio ar, TiendasRepositorio tr, VentasRepositorio vr, Ejemplar_ArticuloRepositorio ear, Vista v, VentanaPrincipal ventanaPrincipal) throws SQLException {
         this.ar = ar;
         this.tr = tr;
         this.vr = vr;
         this.ear = ear;
         this.v = v;
-
+        this.ventanaPrincipal = ventanaPrincipal;
 
         /* VAN
         mostrarTodosArticulos();
@@ -46,7 +48,7 @@ public class Controlador {
         eliminarArticuloRelacionado();
          */
 
-        mostrarMenu();
+        //mostrarMenu();
     }
 
     public void mostrarTodosArticulos() throws SQLException {
@@ -220,37 +222,37 @@ public void mostrarVentas() throws SQLException {
         ear.eliminarEjemplarArticulo(idEjemplar);
     }
     
-    public void mostrarMenu() {
-        boolean salir = false;
-        
-        while (!salir) {
-            try {
-                System.out.println("\n=== MENÚ DE GESTIÓN ===");
-                System.out.println("1. Gestión de Artículos");
-                System.out.println("2. Gestión de Tiendas");
-                System.out.println("3. Gestión de Ventas");
-                System.out.println("4. Gestión de Ejemplares");
-                System.out.println("5. Salir");
-                System.out.print("Seleccione una opción: ");
+   public void mostrarMenu() {
+    boolean salir = false;
+    
+    while (!salir) {
+        try {
+            ventanaPrincipal.mostrarMensaje("\n=== MENÚ DE GESTIÓN ===");
+            ventanaPrincipal.mostrarMensaje("1. Gestión de Artículos");
+            ventanaPrincipal.mostrarMensaje("2. Gestión de Tiendas");
+            ventanaPrincipal.mostrarMensaje("3. Gestión de Ventas");
+            ventanaPrincipal.mostrarMensaje("4. Gestión de Ejemplares");
+            ventanaPrincipal.mostrarMensaje("5. Salir");
+            ventanaPrincipal.mostrarMensaje("Seleccione una opción: ");
 
-                int opcion = v.leerEntero();
+            int opcion = v.leerEntero();
 
-                switch (opcion) {
-                    case 1 -> menuArticulos();
-                    case 2 -> menuTiendas();
-                    case 3 -> menuVentas();
-                    case 4 -> menuEjemplares();
-                    case 5 -> salir = true;
-                    default -> System.out.println("Opción no válida");
-                }
-            } catch (SQLException e) {
-                System.out.println("Error en la base de datos: " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+            switch (opcion) {
+                case 1 -> menuArticulos();
+                case 2 -> menuTiendas();
+                case 3 -> menuVentas();
+                case 4 -> menuEjemplares();
+                case 5 -> salir = true;
+                default -> ventanaPrincipal.mostrarMensaje("Opción no válida");
             }
+        } catch (SQLException e) {
+            ventanaPrincipal.mostrarMensaje("Error en la base de datos: " + e.getMessage());
+        } catch (Exception e) {
+            ventanaPrincipal.mostrarMensaje("Error inesperado: " + e.getMessage());
         }
-        System.out.println("Adiós tete");
     }
+    ventanaPrincipal.mostrarMensaje("Adiós tete");
+}
 
     private void menuArticulos() throws SQLException {
         System.out.println("\n=== GESTIÓN DE ARTÍCULOS ===");
