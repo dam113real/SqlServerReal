@@ -17,23 +17,26 @@ import java.util.logging.Logger;
  */
 public class VentasRepositorio {
     
-    private Connection conexion;
-    
-    public Connection conectar(){
-        try {
-            conexion = ConexionSqlServer.getConnection();
-        } catch (SQLException ex) {
-            Logger.getLogger(ArticulosRepositorio.class.getName()).log(Level.SEVERE, null, ex);
+ConexionPrueba conexionSql;
+     Connection con;
+
+    public void conectar() {
+        if (con == null) {
+            con = conexionSql.getConnection();
         }
-        
-        return conexion;
+        if (con != null) {
+            System.out.println("Estas conectado");
+        } else {
+            System.out.println("No te has conectado");
+        }
     }
-    
+
+
     public void mostrarVenta(String articulo) throws SQLException{
-        Connection conn = conectar();
+         conectar();
         String query = "SELECT * FROM VENTAS WHERE ARTICULO = ?";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, articulo);
             
             try (ResultSet rs = stmt.executeQuery()) {
@@ -53,11 +56,11 @@ public class VentasRepositorio {
     
     public void insertarVenta(String nif, String articulo, int codFabricante, int peso, 
                               String categoria, java.sql.Timestamp fechaVenta, int unidadesVendidas) throws SQLException {
-        Connection conn = conectar();
+         conectar();
         String query = "INSERT INTO VENTAS (NIF, ARTICULO, COD_FABRICANTE, PESO, CATEGORIA, FECHA_VENTA, UNIDADES_VENDIDAS) "
                      + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, nif);
             stmt.setString(2, articulo);
             stmt.setInt(3, codFabricante);
@@ -72,11 +75,11 @@ public class VentasRepositorio {
 
     public void actualizarVenta(String nif, String articulo, int codFabricante, int peso, 
                                 String categoria, java.sql.Timestamp fechaVenta, int unidadesVendidas) throws SQLException {
-        Connection conn = conectar();
+        conectar();
         String query = "UPDATE VENTAS SET PESO = ?, CATEGORIA = ?, FECHA_VENTA = ?, UNIDADES_VENDIDAS = ? "
                      + "WHERE NIF = ? AND ARTICULO = ? AND COD_FABRICANTE = ?";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, peso);
             stmt.setString(2, categoria);
             stmt.setTimestamp(3, fechaVenta);
@@ -90,10 +93,10 @@ public class VentasRepositorio {
 
 
     public void eliminarVenta(String nif, String articulo, int codFabricante) throws SQLException {
-        Connection conn = conectar();
+         conectar();
         String query = "DELETE FROM VENTAS WHERE NIF = ? AND ARTICULO = ? AND COD_FABRICANTE = ?";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, nif);
             stmt.setString(2, articulo);
             stmt.setInt(3, codFabricante);

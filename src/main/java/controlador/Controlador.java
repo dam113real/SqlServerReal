@@ -5,6 +5,10 @@
 package controlador;
 
 import java.sql.SQLException;
+
+
+import java.sql.Timestamp;
+
 import modelo.ArticulosRepositorio;
 import modelo.Ejemplar_Articulo;
 import modelo.Ejemplar_ArticuloRepositorio;
@@ -17,7 +21,11 @@ import vista.Vista;
  * @author Diurno
  */
 public class Controlador {
+
     ArticulosRepositorio ar;
+
+
+
     TiendasRepositorio tr; 
     VentasRepositorio vr; 
     Ejemplar_ArticuloRepositorio ear; 
@@ -30,13 +38,30 @@ public class Controlador {
         this.ear = ear;
         this.v = v;
         
+
 //        mostrarTodosArticulos();
 //        mostrarTienda();
+
+        mostrarTodosArticulos();
+        mostrarTienda();
+
 //        mostrarVentas();
 //        mostrarEjemplar_Articulo();
 //        insertarArticulo();
 //        actualizarArticulo();
 //        eliminarArticulo();
+
+
+//        insertarTienda();
+//        actualizarTienda();
+//        eliminarTienda();
+//        insertarVentas();
+//        actualizarVentas();
+//        eliminarVentas();
+//        insertarEjemplar_Articulo();
+//        actualizarEjemplar_Articulo();
+//        eliminarEjemplar_Articulo();
+
     }
 
     public void mostrarTodosArticulos() throws SQLException{
@@ -88,4 +113,95 @@ public class Controlador {
         
         ar.eliminarArticulo(articulo, codFabricante);
     }
+
+
+
+    
+    public void insertarTienda() throws SQLException{
+        String nif = "T4233232";
+        String nombre = "TiendaA";
+        String direccion = "Calle Juan Serrano";
+        String poblacion = "Logroño";
+        String provincia = "La Rioja";
+        int codpostal = 26004;
+        
+        tr.insertarTienda(nif, nombre, direccion, poblacion, provincia, codpostal);
+    }
+    
+    public void actualizarTienda() throws SQLException{
+        String nif = "T4233232";
+        String nombre = "TiendaA";
+        String direccion = "Calle Gregorio";
+        String poblacion = "Lardero";
+        String provincia = "La Rioja";
+        int codpostal = 26104;
+        
+        tr.actualizarTienda(nif, nombre, direccion, poblacion, provincia, codpostal);
+    }
+    
+    public void eliminarTienda() throws SQLException{
+        String nif = "T4233232";
+        
+        tr.eliminarTienda(nif);
+    }
+    
+    public void insertarVentas() throws SQLException{
+        String nif = "R3242343";
+        String articulo = "Macarrones";
+        int codFabricante = 1243;
+        int peso = 1;
+        String categoria = "Primaria";
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        int unidadesVendidas = 10;
+        
+        vr.insertarVenta(nif, articulo, codFabricante, peso, categoria, time, unidadesVendidas);
+    }
+    
+    public void actualizarVentas() throws SQLException{
+        String nif = "R3242343";
+        String articulo = "Macarrones";
+        int codFabricante = 1243;
+        int peso = 2;
+        String categoria = "Segunda";
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        int unidadesVendidas = 4;
+        
+        vr.actualizarVenta(nif, articulo, codFabricante, peso, categoria, time, unidadesVendidas);
+    }
+    
+    public void eliminarVentas() throws SQLException{
+        String nif = "R3242343";
+        String articulo = "Macarrones";
+        int codFabricante = 1243;
+        
+        vr.eliminarVenta(nif, articulo, codFabricante);
+    }
+    
+    public void insertarEjemplar_Articulo() throws SQLException{
+        String articulo = "Pasta";
+        int codFabricante = 5342;
+        String estado = "En Proceso";
+        Timestamp fechaAdquisicion = new Timestamp(System.currentTimeMillis());
+        String ubicacion = "Almacen";
+        
+        ear.insertarEjemplarArticulo(articulo, codFabricante, estado, fechaAdquisicion, ubicacion);
+    }
+    
+    public void actualizarEjemplar_Articulo() throws SQLException{
+        int idEjemplar = 12;
+        String estado = "En Proceso";
+        Timestamp fechaAdquisicion = new Timestamp(System.currentTimeMillis());
+        String ubicacion = "Almacen";
+        
+        ear.actualizarEjemplarArticulo(idEjemplar, estado, fechaAdquisicion, ubicacion);
+    }
+    
+    public void eliminarEjemplar_Articulo() throws SQLException{
+        int idEjemplar = 12;
+        
+        ear.eliminarEjemplarArticulo(idEjemplar);
+    }
 }
+
+
+

@@ -17,25 +17,32 @@ import java.util.logging.Logger;
  * @author Diurno
  */
 public class ArticulosRepositorio {
-    
-    private Connection conexion;
-    
-    public Connection conectar(){
-        try {
-            conexion = ConexionSqlServer.getConnection();
-        } catch (SQLException ex) {
-            Logger.getLogger(ArticulosRepositorio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return conexion;
+
+     ConexionPrueba conexionSql;
+     Connection con;
+     
+     public ArticulosRepositorio() {
+        this.conexionSql = new ConexionPrueba();  // Inicializar la conexión
     }
-    
-    public void mostrarArticulo() throws SQLException{
-        Connection conn = conectar();
+
+
+    public void conectar() {
+        if (con == null) {
+            con = conexionSql.getConnection();
+        }
+        if (con != null) {
+            System.out.println("Estas conectado");
+        } else {
+            System.out.println("No te has conectado");
+        }
+    }
+
+
+    public void mostrarArticulo() throws SQLException {
+        conectar();
         String query = "SELECT * FROM ARTICULOS";
-        
-        try (Statement stmt = conn.createStatement(); 
-             ResultSet rs = stmt.executeQuery(query)){
+
+        try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
                 String articulo = rs.getString("ARTICULO");
                 int codFabricante = rs.getInt("COD_FABRICANTE");
@@ -45,22 +52,22 @@ public class ArticulosRepositorio {
                 double precioCosto = rs.getDouble("PRECIO_COSTO");
                 double existencias = rs.getDouble("EXISTENCIAS");
 
-                System.out.println("Artículo: " + articulo + ", Código Fabricante: " + codFabricante + 
-                                   ", Peso: " + peso + ", Categoría: " + categoria + 
-                                   ", Precio Venta: " + precioVenta + ", Precio Costo: " + precioCosto + 
-                                   ", Existencias: " + existencias);
+                System.out.println("Artículo: " + articulo + ", Código Fabricante: " + codFabricante
+                        + ", Peso: " + peso + ", Categoría: " + categoria
+                        + ", Precio Venta: " + precioVenta + ", Precio Costo: " + precioCosto
+                        + ", Existencias: " + existencias);
             }
         }
     }
-    
-    public void insertarArticulo(String articulo, int codFabricante, int peso, String categoria, 
-                                 double precioVenta, double precioCosto, double existencias) throws SQLException {
-        
-        Connection conn = conectar();
+
+    public void insertarArticulo(String articulo, int codFabricante, int peso, String categoria,
+            double precioVenta, double precioCosto, double existencias) throws SQLException {
+
+        conectar();
         String query = "INSERT INTO ARTICULOS (ARTICULO, COD_FABRICANTE, PESO, CATEGORIA, PRECIO_VENTA, PRECIO_COSTO, EXISTENCIAS) "
-                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, articulo);
             stmt.setInt(2, codFabricante);
             stmt.setInt(3, peso);
@@ -72,15 +79,14 @@ public class ArticulosRepositorio {
         }
     }
 
+    public void actualizarArticulo(String articulo, int codFabricante, int peso, String categoria,
+            double precioVenta, double precioCosto, double existencias) throws SQLException {
+         conectar();
 
-    public void actualizarArticulo(String articulo, int codFabricante, int peso, String categoria, 
-                                   double precioVenta, double precioCosto, double existencias) throws SQLException {
-        Connection conn = conectar();
-        
         String query = "UPDATE ARTICULOS SET PESO = ?, CATEGORIA = ?, PRECIO_VENTA = ?, PRECIO_COSTO = ?, EXISTENCIAS = ? "
-                     + "WHERE ARTICULO = ? AND COD_FABRICANTE = ?";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                + "WHERE ARTICULO = ? AND COD_FABRICANTE = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, peso);
             stmt.setString(2, categoria);
             stmt.setDouble(3, precioVenta);
@@ -92,13 +98,12 @@ public class ArticulosRepositorio {
         }
     }
 
-
     public void eliminarArticulo(String articulo, int codFabricante) throws SQLException {
         String query = "DELETE FROM ARTICULOS WHERE ARTICULO = ? AND COD_FABRICANTE = ?";
-        
-        Connection conn = conectar();
-        
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+         conectar();
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, articulo);
             stmt.setInt(2, codFabricante);
             stmt.executeUpdate();

@@ -17,23 +17,32 @@ import java.sql.Statement;
  */
 public class ConexionSqlServer {
 
-    public static void main(String[] args) {
+
         
         
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=NombreBaseDeDatos";
-    private static final String USER = "tu_usuario";  // Usuario de la base de datos
-    private static final String PASSWORD = "tu_contraseña";  // Contraseña del usuario
+
+    // Configuración de la conexión
+    static String user = "Usuario1";
+    static String pwd = "1234";
+    static String nombreBD = "AccesoDatos";
+    static String url = "jdbc:sqlserver://1433/" + nombreBD;
 
     // Método para obtener la conexión
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() {
+        Connection connection = null;
         try {
-            // Cargar el driver de SQL Server (no es necesario en las versiones más recientes de JDBC)
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-            // Retornar la conexión
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("No se pudo encontrar el driver de SQL Server", e);
+            connection = DriverManager.getConnection(url, user, pwd);
+            System.out.println("Conexión exitosa a la base de datos.");
+        } catch (SQLException e) {
+            System.err.println("Error al conectar a la base de datos:");
+            e.printStackTrace();
         }
+        return connection;
     }
+/*
+    // Método main para probar la conexión
+    public static void main(String[] args) {
+        getConnection();
+    }*/
 }
+

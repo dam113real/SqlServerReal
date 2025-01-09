@@ -18,23 +18,31 @@ import java.util.logging.Logger;
  */
 public class Ejemplar_ArticuloRepositorio {
     
-    private Connection conexion;
-    
-    public Connection conectar(){
-        try {
-            conexion = ConexionSqlServer.getConnection();
-        } catch (SQLException ex) {
-            Logger.getLogger(ArticulosRepositorio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return conexion;
+    ConexionPrueba conexionSql;
+     Connection con;
+     
+     public Ejemplar_ArticuloRepositorio() {
+        this.conexionSql = new ConexionPrueba();  // Inicializar la conexión
     }
+
+
+    public void conectar() {
+        if (con == null) {
+            con = conexionSql.getConnection();
+        }
+        if (con != null) {
+            System.out.println("Estas conectado");
+        } else {
+            System.out.println("No te has conectado");
+        }
+    }
+
     
     public void mostrarEjemplar_Articulo(String articulo) throws SQLException{
-        Connection conn = conectar();
+         conectar();
         String query = "SELECT * FROM EJEMPLAR_ARTICULO WHERE ARTICULO = ?";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, articulo);
             
             try (ResultSet rs = stmt.executeQuery()) {
@@ -53,11 +61,11 @@ public class Ejemplar_ArticuloRepositorio {
     
     public void insertarEjemplarArticulo(String articulo, int codFabricante, String estado, 
                                          Timestamp fechaAdquisicion, String ubicacion) throws SQLException {
-        Connection conn = conectar();
+        conectar();
         String query = "INSERT INTO EJEMPLAR_ARTICULO (ARTICULO, COD_FABRICANTE, ESTADO, FECHA_ADQUISICION, UBICACION) "
                      + "VALUES (?, ?, ?, ?, ?)";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, articulo);
             stmt.setInt(2, codFabricante);
             stmt.setString(3, estado);
@@ -69,11 +77,11 @@ public class Ejemplar_ArticuloRepositorio {
 
     public void actualizarEjemplarArticulo(int idEjemplar, String estado, Timestamp fechaAdquisicion, 
                                            String ubicacion) throws SQLException {
-        Connection conn = conectar();
+        conectar();
         String query = "UPDATE EJEMPLAR_ARTICULO SET ESTADO = ?, FECHA_ADQUISICION = ?, UBICACION = ? "
                      + "WHERE ID_EJEMPLAR = ?";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, estado);
             stmt.setTimestamp(2, fechaAdquisicion);
             stmt.setString(3, ubicacion);
@@ -83,10 +91,10 @@ public class Ejemplar_ArticuloRepositorio {
     }
 
     public void eliminarEjemplarArticulo(int idEjemplar) throws SQLException {
-        Connection conn = conectar();
+        conectar();
         String query = "DELETE FROM EJEMPLAR_ARTICULO WHERE ID_EJEMPLAR = ?";
         
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, idEjemplar);
             stmt.executeUpdate();
         }
