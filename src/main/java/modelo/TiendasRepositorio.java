@@ -36,29 +36,31 @@ public class TiendasRepositorio {
     }
 
     public void mostrarTienda(String nif) throws SQLException {
-
-        conectar();
-
-        String query = "SELECT * FROM VENTAS WHERE NIF = ?";
-
-        try (PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setString(1, nif);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int idVenta = rs.getInt("ID_VENTA");
-                    String articulo = rs.getString("ARTICULO");
-                    double cantidad = rs.getDouble("CANTIDAD");
-                    double total = rs.getDouble("TOTAL");
-                    String fechaVenta = rs.getString("FECHA_VENTA");
-
-                    System.out.println("Venta ID: " + idVenta + ", Artículo: " + articulo
-                            + ", Cantidad: " + cantidad + ", Total: " + total
-                            + ", Fecha Venta: " + fechaVenta);
-                }
+    conectar();
+    String query = "SELECT * FROM TIENDAS WHERE NIF = ?";
+    
+    try (PreparedStatement stmt = con.prepareStatement(query)) {
+        stmt.setString(1, nif);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String nifTienda = rs.getString("NIF");
+                String nombre = rs.getString("NOMBRE");
+                String direccion = rs.getString("DIRECCION");
+                String poblacion = rs.getString("POBLACION");
+                String provincia = rs.getString("PROVINCIA");
+                String codPostal = rs.getString("CODPOSTAL");
+                
+                System.out.println("NIF: " + nifTienda + 
+                                 ", Nombre: " + nombre +
+                                 ", Dirección: " + direccion +
+                                 ", Población: " + poblacion +
+                                 ", Provincia: " + provincia +
+                                 ", Código Postal: " + codPostal);
             }
         }
     }
+}
+
 
     public void insertarTienda(String nif, String nombre, String direccion, String poblacion,
             String provincia, int codPostal) throws SQLException {

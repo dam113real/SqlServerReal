@@ -19,6 +19,11 @@ public class VentasRepositorio {
     
 ConexionPrueba conexionSql;
      Connection con;
+     
+     public VentasRepositorio() {
+        this.conexionSql = new ConexionPrueba();  // Inicializar la conexión
+    }
+
 
     public void conectar() {
         if (con == null) {
@@ -32,27 +37,36 @@ ConexionPrueba conexionSql;
     }
 
 
-    public void mostrarVenta(String articulo) throws SQLException{
-         conectar();
-        String query = "SELECT * FROM VENTAS WHERE ARTICULO = ?";
+    public void mostrarVenta(String articulo) throws SQLException {
+    conectar();
+    String query = "SELECT * FROM VENTAS WHERE ARTICULO = ?";
+    
+    try (PreparedStatement stmt = con.prepareStatement(query)) {
+        stmt.setString(1, articulo);
         
-        try (PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setString(1, articulo);
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int idVenta = rs.getInt("ID_VENTA");
-                    String nif = rs.getString("NIF");
-                    double cantidad = rs.getDouble("CANTIDAD");
-                    double total = rs.getDouble("TOTAL");
-                    String fechaVenta = rs.getString("FECHA_VENTA");
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String nif = rs.getString("NIF");
+                String articuloNombre = rs.getString("ARTICULO");
+                int codFabricante = rs.getInt("COD_FABRICANTE");
+                int peso = rs.getInt("PESO");
+                String categoria = rs.getString("CATEGORIA");
+                String fechaVenta = rs.getString("FECHA_VENTA");
+                int unidadesVendidas = rs.getInt("UNIDADES_VENDIDAS");
 
-                    System.out.println("Venta ID: " + idVenta + ", NIF: " + nif + ", Cantidad: " + cantidad + 
-                                       ", Total: " + total + ", Fecha Venta: " + fechaVenta);
-                }
+                System.out.println(
+                    "NIF: " + nif + 
+                    ", Artículo: " + articuloNombre + 
+                    ", Código Fabricante: " + codFabricante +
+                    ", Peso: " + peso +
+                    ", Categoría: " + categoria +
+                    ", Fecha Venta: " + fechaVenta +
+                    ", Unidades Vendidas: " + unidadesVendidas
+                );
             }
         }
     }
+}
     
     public void insertarVenta(String nif, String articulo, int codFabricante, int peso, 
                               String categoria, java.sql.Timestamp fechaVenta, int unidadesVendidas) throws SQLException {
